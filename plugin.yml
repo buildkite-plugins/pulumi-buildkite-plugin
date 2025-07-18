@@ -1,0 +1,31 @@
+name: Setup Pulumi
+description: Install Pulumi for use in Buildkite builds
+author: https://github.com/praneetloke
+requirements:
+  - curl
+  - jq
+  - funzip
+  - bash
+configuration:
+  properties:
+    version:
+      type: string
+    backend-url:
+      type: string
+    use-oidc:
+      type: boolean
+    audience:
+      # Required if use-oidc is true.
+      type: string
+    pulumi-token-type:
+      # Required if use-oidc is true. Can be one of:
+      # - urn:pulumi:token-type:access_token:organization
+      # - urn:pulumi:token-type:access_token:team (scope is required)
+      # - urn:pulumi:token-type:access_token:personal (scope is required)
+      type: string
+    pulumi-token-scope:
+      # Required if use-oidc is true. Can be one of:
+      # - admin (if org-level token type is requested)
+      # - team:TEAM_NAME (for team token type)
+      # - user:USER_LOGIN (for personal token type)
+      type: string
