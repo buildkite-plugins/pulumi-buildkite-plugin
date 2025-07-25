@@ -2,25 +2,16 @@
 
 set -euo pipefail
 
-echo "~~~ Setup Pulumi"
+echo "~~~ Set up Pulumi"
 
-PULUMI_VERSION="${BUILDKITE_PLUGIN_SETUP_PULUMI_VERSION:-$(curl --silent --show-error "https://www.pulumi.com/latest-version")}"
+PULUMI_VERSION="${BUILDKITE_PLUGIN_PULUMI_VERSION:-$(curl --silent --show-error "https://www.pulumi.com/latest-version")}"
 
-curl -fsSL https://get.pulumi.com | sh -s -- --version $PULUMI_VERSION
+curl -fsSL https://get.pulumi.com | sh -s -- --version "$PULUMI_VERSION"
+echo "Pulumi version: $(pulumi version)"
 
-export PATH="$HOME/.pulumi/bin:$PATH"
-
-ACTUAL_PULUMI_VERSION=$(pulumi version)
-echo "Pulumi version: $ACTUAL_PULUMI_VERSION"
-
-USE_OIDC="${BUILDKITE_PLUGIN_SETUP_PULUMI_USE_OIDC:-false}"
+USE_OIDC="${BUILDKITE_PLUGIN_PULUMI_USE_OIDC:-false}"
 PULUMI_CLOUD_BACKEND_URL="https://api.pulumi.com"
-BACKEND_URL="${BUILDKITE_PLUGIN_SETUP_PULUMI_BACKEND_URL:-$PULUMI_CLOUD_BACKEND_URL}"
-
-if [ "${USE_OIDC}" != "true" ] && [ -z "${PULUMI_ACCESS_TOKEN:-}" ] && [ "${BACKEND_URL}" = "${PULUMI_CLOUD_BACKEND_URL}" ]; then
-    echo "❌ PULUMI_ACCESS_TOKEN is required for Pulumi Cloud backend since OIDC is not used."
-    exit 1
-fi
+BACKEND_URL="${BUILDKITE_PLUGIN_PULUMI_BACKEND_URL:-$PULUMI_CLOUD_BACKEND_URL}"
 
 if [ "${USE_OIDC}" != "true" ]; then
     exit 0
@@ -28,7 +19,7 @@ fi
 
 # The following steps assume `USE_OIDC` is true.
 
-OIDC_AUDIENCE="${BUILDKITE_PLUGIN_SETUP_PULUMI_AUDIENCE:-}"
+OIDC_AUDIENCE="${BUILDKITE_PLUGIN_PULUMI_AUDIENCE:-}"
 
 if [ -z "${OIDC_AUDIENCE:-}" ]; then
     echo "❌ audience is required when using OIDC auth method with Pulumi Cloud."
@@ -37,8 +28,8 @@ fi
 
 bk_token=$(buildkite-agent oidc request-token --audience "$OIDC_AUDIENCE")
 
-PULUMI_TOKEN_TYPE="${BUILDKITE_PLUGIN_SETUP_PULUMI_PULUMI_TOKEN_TYPE:-}"
-PULUMI_TOKEN_SCOPE="${BUILDKITE_PLUGIN_SETUP_PULUMI_PULUMI_TOKEN_SCOPE:-}"
+PULUMI_TOKEN_TYPE="${BUILDKITE_PLUGIN_PULUMI_PULUMI_TOKEN_TYPE:-}"
+PULUMI_TOKEN_SCOPE="${BUILDKITE_PLUGIN_PULUMI_PULUMI_TOKEN_SCOPE:-}"
 
 if [ -z "${PULUMI_TOKEN_TYPE:-}" ] || [ -z "${PULUMI_TOKEN_SCOPE:-}" ]; then
     echo "❌ pulumi-token-type and pulumi-token-scope are required when using OIDC auth method with Pulumi Cloud."
@@ -62,8 +53,8 @@ if [ -z "${json:-}" ]; then
     exit 1
 fi
 
-pul_access_token=$(echo $json | jq -r -c '.access_token')
+pul_access_token=$(echo "$json" | jq -r -c '.access_token')
 
-PULUMI_ACCESS_TOKEN=$pul_access_token pulumi login "${BACKEND_URL}"
+PULUMI_ACCESS_TOKEN="$pul_access_token" pulumi login "${BACKEND_URL}"
 
 echo "✔️ Logged into backend $BACKEND_URL..."

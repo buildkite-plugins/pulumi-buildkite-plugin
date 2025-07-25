@@ -1,11 +1,15 @@
 steps:
-  - label: ":shell: Shellcheck"
+  - label: ":shell: Run Shellcheck"
     plugins:
       - shellcheck#v1.4.0:
           files:
             - hooks/**
 
-  - label: ":sparkles:"
+  - label: ":sparkles: Run lint checks"
     plugins:
       - plugin-linter#v3.3.0:
-          id: docker
+          id: pulumi
+
+  - label: ":test_tube: Run tests"
+    plugins:
+      - plugin-tester#v1.2.0:
