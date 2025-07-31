@@ -62,6 +62,15 @@ steps:
           pulumi_token_scope: "user:${YOUR_PULUMI_CLOUD_USERNAME}"
 ```
 
+Once the issuer in Pulumi is created, the policy editor page will open. Update the settings with the following values:
+
+1. **Decision**: `Allow`
+1. **Token type**: [value is dependent on your Pulumi pricing tier]
+1. **Rules** > `aud` claim: `urn:pulumi:org:{your Pulumi account name}` (Pulumi account name can be your individual account or your Pulumi org name that you see in the URL address bar.)
+1. **Rules** > `sub` claim: See the format of the value used by Buildkite tokens: https://buildkite.com/docs/agent/v3/cli-oidc#claims.
+    - If there are parts of `sub` string that you don't want to specify a value for, you must use a wildcard char `*` in its place. For example, if the organization name is `myorg` and the pipeline name is `mypipeline`, a `sub` claim value of `organization:myorg:pipeline:mypipeline:ref:*:commit:*:step:*` would mean that Pulumi would ignore the value of `ref`, `commit` and `step` tokens.
+1. Add more claims if you would like Pulumi to validate additional claims in the Buildkite ID token.
+
 See the [Pulumi Cloud OIDC](https://www.pulumi.com/docs/pulumi-cloud/access-management/oidc-client/) and [Buildkite Agent OIDC](https://buildkite.com/docs/agent/v3/cli-oidc) docs for additional configuration options and details.
 
 ## License
