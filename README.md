@@ -62,7 +62,7 @@ steps:
           pulumi_token_scope: "user:${YOUR_PULUMI_CLOUD_USERNAME}"
 ```
 
-Once the issuer is created, the policy editor page will open. Update the settings to the following values:
+Once the issuer in Pulumi is created, the policy editor page will open. Update the settings with the following values:
 
 1. **Decision**: `Allow`
 1. **Token type**: [value is dependent on your Pulumi pricing tier]
