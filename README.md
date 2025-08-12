@@ -59,7 +59,7 @@ steps:
           use-oidc: true
           audience: "urn:pulumi:org:${YOUR_PULUMI_ORG}"
           pulumi-token-type: "urn:pulumi:token-type:access_token:personal"
-          pulumi_token_scope: "user:${YOUR_PULUMI_CLOUD_USERNAME}"
+          pulumi-token-scope: "user:${YOUR_PULUMI_CLOUD_USERNAME}"
 ```
 
 Once the issuer in Pulumi is created, the policy editor page will open. Update the settings with the following values:
