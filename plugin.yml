@@ -9,13 +9,13 @@ configuration:
   properties:
     version:
       type: string
-    backend_url:
+    backend-url:
       type: string
-    use_oidc:
+    use-oidc:
       type: boolean
     audience:
       type: string
-    pulumi_token_type:
+    pulumi-token-type:
       type: string
-    pulumi_token_scope:
+    pulumi-token-scope:
       type: string

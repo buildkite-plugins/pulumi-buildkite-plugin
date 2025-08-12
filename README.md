@@ -56,9 +56,9 @@ steps:
     command: pulumi up
     plugins:
       - pulumi#v1.0.0:
-          use_oidc: true
+          use-oidc: true
           audience: "urn:pulumi:org:${YOUR_PULUMI_ORG}"
-          pulumi_token_type: "urn:pulumi:token-type:access_token:personal"
+          pulumi-token-type: "urn:pulumi:token-type:access_token:personal"
           pulumi_token_scope: "user:${YOUR_PULUMI_CLOUD_USERNAME}"
 ```
 
