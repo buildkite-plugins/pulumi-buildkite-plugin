@@ -19,7 +19,7 @@ export BUILDKITE_AGENT_STUB_DEBUG=/dev/tty
   unstub pulumi
 }
 
-@test "Installs the pecified version of Pulumi when one is provided" {
+@test "Installs the specified version of Pulumi when one is provided" {
   export BUILDKITE_PLUGIN_PULUMI_VERSION="3.100.0"
 
   stub pulumi 'version : echo "v3.100.0"'
@@ -28,7 +28,7 @@ export BUILDKITE_AGENT_STUB_DEBUG=/dev/tty
   run "$PWD/hooks/pre-command"
 
   assert_success
-  assert_output --partial "=== Upgrading Pulumi v3.186.0 to 3.100.0 ==="
+  assert_output --regexp "=== Upgrading Pulumi v[0-9]+\.[0-9]+\.[0-9]+ to 3\.100\.0 ==="
   assert_output --partial "Pulumi version: v3.100.0"
 
   unstub pulumi
